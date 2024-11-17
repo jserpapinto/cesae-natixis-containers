@@ -1,0 +1,14 @@
+_default:
+  @just --list --unsorted
+
+build:
+  docker build -t cesae-natixis-containers-3.1 .
+
+build-with-arg:
+  docker build --build-arg BUILD_ENV=staging -t node-vite-app .
+
+run:
+  docker run --rm -p 3000:3000 cesae-natixis-containers-3.1
+
+run-with-env:
+  docker run --rm -p 3000:5000 -e PORT=5000 cesae-natixis-containers-3.1

@@ -1,0 +1,33 @@
+# Imagem base otimizada
+FROM node:20-alpine
+
+# Configuração de variáveis de ambiente
+# Demonstra que são úteis à aplicação
+ENV PORT=3000 \
+	APP_NAME="DemoApp"
+
+# Definir o diretório de trabalho
+WORKDIR /app
+
+# Copiar apenas os ficheiros necessários para evitar trazer arquivos desnecessários
+COPY package*.json ./
+
+# Limpar a cache depois de instalar as dependências
+RUN npm install && \
+	npm cache clean --force
+
+# Configuração de variáveis de ambiente
+# Se definirmos NODE_ENV, o npm install vai instalar apenas as dependências de produção.
+ENV NODE_ENV=production
+
+# Copiar o código da aplicação para o container
+COPY . .
+
+# Build do código
+RUN npm run build
+
+# Expor a porta configurada
+EXPOSE ${PORT}
+
+# Comando padrão para iniciar a aplicação
+CMD ["node", "build/server.js"]

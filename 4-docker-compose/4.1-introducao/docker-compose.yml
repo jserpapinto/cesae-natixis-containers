@@ -1,0 +1,43 @@
+services:
+  
+  web:  # Serviço para o servidor NGINX.
+    image: nginx:latest  # Imagem oficial do NGINX.
+    # build:
+    #   context: ./docker/nginx
+    #   dockerfile: Dockerfile
+    environment:
+      NGINX_PORT: 80
+      SERVER_NAME: localhost
+    ports:
+      - "8080:80"  # Mapeia a porta 80 do container para a porta 8080 no host.
+    networks:
+      - app-network  # Usa a rede app-network para comunicação com outros serviços.
+    volumes:
+      - ./html:/usr/share/nginx/html  # Monta o diretório local ./html no container.
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.50'
+    #       memory: 8M
+
+  database:  # Serviço para o banco de dados MySQL.
+    image: mysql:8  # Imagem oficial do MySQL versão 5.7.
+    environment:  # Configurações do banco de dados.
+      MYSQL_ROOT_PASSWORD: example  # Senha do usuário root.
+      MYSQL_DATABASE: mydb  # Nome da base de dados.
+      MYSQL_USER: user  # Nome do usuário do banco de dados.
+      MYSQL_PASSWORD: password  # Senha do usuário criado.
+    ports:
+      - "3306:3306"  # Mapeia a porta 3306 do container para o host.
+    networks:
+      - app-network  # Usa a mesma rede que o serviço web.
+    volumes:
+      - db-data:/var/lib/mysql  # Volume para persistir os dados do banco.
+
+networks:
+  app-network:  # Define uma rede para os serviços.
+    driver: bridge  # Tipo de rede que permite comunicação entre os serviços.
+
+volumes:
+  db-data:  # Volume para armazenar dados do MySQL.
+    driver: local  # Armazena os dados localmente no host.
