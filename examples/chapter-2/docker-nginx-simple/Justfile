@@ -2,4 +2,4 @@ _default:
   @just --list --unsorted
 
 run:
-  docker run --name cesae-natixis-2.4-nginx -v $(pwd):/usr/share/nginx/html -p 8081:80 nginx
+  docker run --name cesae-natixis-simple-nginx -v $(pwd):/usr/share/nginx/html -p 8081:80 nginx
